@@ -152,7 +152,7 @@ Use a markdown checklist and re-print it after each major step:
 ## Build steps
 
 1. **Database** — create `database/database.sqlproj` (SDK `Microsoft.Build.Sql/2.0.0`), `Tables/*.sql`, and `Scripts/PostDeployment.sql` with idempotent seed data. Build with `dotnet build database/database.sqlproj`.
-2. **DAB** — `data-api/dab-config.json` pinned to DAB image `1.7.83-rc` or later, REST + GraphQL + MCP enabled. The **Azure** connection string is passwordless: `Server=tcp:<sqlserver>.database.windows.net,1433;Database=<db>;Authentication=Active Directory Default;Encrypt=True;TrustServerCertificate=False;`. **No `User ID` or `Password`** in the Azure config. Entities exposed under `anonymous` for this quickstart.
+2. **DAB** — `data-api/dab-config.json` uses the GA DAB image `mcr.microsoft.com/azure-databases/data-api-builder:latest`, with REST + GraphQL + MCP enabled. The **Azure** connection string is passwordless: `Server=tcp:<sqlserver>.database.windows.net,1433;Database=<db>;Authentication=Active Directory Default;Encrypt=True;TrustServerCertificate=False;`. **No `User ID` or `Password`** in the Azure config. Entities exposed under `anonymous` for this quickstart.
 3. **DAB Dockerfile** — `data-api/Dockerfile` copies `dab-config.json` into the image (custom image pattern — **never** mount config from Azure Files).
 4. **Aspire** — `aspire-apphost/Aspire.AppHost.csproj` and `Program.cs` orchestrate SQL Server locally, deploy the dacpac, and run DAB, the web app, SQL Commander, and MCP Inspector. (Local can use SQL Auth against the container; cloud must be passwordless.)
 5. **Web app** — `web-app/index.html` + `app.js` + `dab.js` + `config.js`. No MSAL. Calls DAB anonymously.
